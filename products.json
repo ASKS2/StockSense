@@ -1,0 +1,29 @@
+[
+  {
+    "id": "prod-1",
+    "name": "Steel Rods",
+    "sku": "STL-ROD-001",
+    "category": "Raw Material",
+    "unit": "kg",
+    "reorderLevel": 50,
+    "stock": { "wh-1": 100, "wh-2": 0, "wh-3": 0 }
+  },
+  {
+    "id": "prod-2",
+    "name": "Wooden Chairs",
+    "sku": "FRN-CHR-014",
+    "category": "Finished Goods",
+    "unit": "pcs",
+    "reorderLevel": 10,
+    "stock": { "wh-1": 35, "wh-2": 0, "wh-3": 0 }
+  },
+  {
+    "id": "prod-3",
+    "name": "Packing Cartons",
+    "sku": "PKG-CTN-002",
+    "category": "Packaging",
+    "unit": "pcs",
+    "reorderLevel": 100,
+    "stock": { "wh-1": 40, "wh-2": 0, "wh-3": 200 }
+  }
+]

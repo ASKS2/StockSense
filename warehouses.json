@@ -1,0 +1,5 @@
+[
+  { "id": "wh-1", "name": "Main Warehouse", "location": "Amritsar, Punjab" },
+  { "id": "wh-2", "name": "Production Floor", "location": "Amritsar, Punjab" },
+  { "id": "wh-3", "name": "Warehouse 2 (Overflow)", "location": "Jalandhar, Punjab" }
+]
