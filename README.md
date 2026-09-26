@@ -1,55 +1,42 @@
-# 📦 StockSense
+# StockSense
 
-**A modular Inventory Management System (IMS) that replaces manual registers,
-Excel sheets and scattered tracking with one centralized, real-time app.**
+StockSense is an inventory management system built to replace the usual mess of paper registers, WhatsApp updates, and half-updated Excel sheets that most small and mid-size businesses rely on. It gives inventory managers and warehouse staff one place to see exactly how much stock they have, where it is, and what's moving in or out.
 
-Built in a hackathon by a 4-person team — see [Team & Modules](#-team--modules) below.
+Built for a hackathon by a 4-person team.
 
----
+## What it does
 
-## ✨ Why StockSense
+- **Auth** — sign up, log in, and reset your password with an OTP
+- **Dashboard** — live counts of total products, low/out-of-stock items, and pending documents, plus a feed of recent activity you can filter by type, status, warehouse, or category
+- **Products** — add products with a SKU, category, unit of measure, and reorder level, and track stock per warehouse
+- **Receipts** — log stock coming in from suppliers; validating a receipt adds the stock automatically
+- **Delivery orders** — pick, pack, and validate outgoing shipments; validating removes the stock automatically
+- **Internal transfers** — move stock between warehouses or racks without changing the total count
+- **Stock adjustments** — reconcile a physical count against what's on record, with the difference logged automatically
+- **Settings** — manage the warehouses used across the app
 
-Most small and mid-size businesses still track stock across notebooks, WhatsApp
-messages and half-updated spreadsheets. StockSense gives Inventory Managers and
-Warehouse Staff a single source of truth: one dashboard, one ledger, one
-number for "how much stock do we actually have?"
+Every action that changes stock gets logged, so there's always a record of what happened and when.
 
-## 🧩 Core Features
+## Tech stack
 
-| Module | What it does |
-|---|---|
-| **Auth** | Sign up / log in, OTP-based password reset |
-| **Dashboard** | Live KPIs (total products, low/out of stock, pending docs) + a filterable operations feed |
-| **Products** | Create products with SKU, category, unit of measure, reorder level, per-warehouse stock |
-| **Receipts** | Record incoming stock from suppliers → validating a receipt increases stock automatically |
-| **Delivery Orders** | Pick → Pack → Validate outgoing stock for customer shipments → stock decreases automatically |
-| **Internal Transfers** | Move stock between warehouses/racks/floors — total stock stays the same, only location changes |
-| **Stock Adjustments** | Reconcile a physical count against recorded stock; the system computes and logs the delta |
-| **Settings** | Manage warehouses/locations used across every module |
+- **Backend:** Node.js + Express, JWT authentication, bcrypt for password hashing, and a simple JSON-file data store (easy to swap for a real database later without touching the route logic)
+- **Frontend:** Plain HTML, CSS, and JavaScript — no build step, no framework overhead
+- **Auth:** JWT bearer tokens, with OTP-based password reset (in this demo the OTP shows up in the API response and server console instead of an actual email, since there's no email provider wired up)
 
-Every stock-changing action is logged, so nothing moves without a trace —
-exactly like the "Stock Ledger" in the original problem statement.
-
-## 🛠 Tech Stack
-
-- **Backend:** Node.js, Express, JWT auth, bcrypt password hashing, JSON-file storage (zero external DB needed — swap in MongoDB/Postgres later without touching route logic)
-- **Frontend:** Vanilla HTML/CSS/JS (no build step — open and run), `fetch`-based API client
-- **Auth:** JWT bearer tokens, OTP-based password reset (demo mode logs the OTP to the server console / API response)
-
-## 📁 Folder Structure
+## Project structure
 
 ```
 StockSense/
 ├── backend/
-│   ├── config/db.js          # JSON-file data layer
-│   ├── models/                # One file per entity (User, Product, Receipt, ...)
-│   ├── routes/                # Express routers, one per module
-│   ├── middleware/auth.js     # JWT guard
-│   ├── utils/otp.js           # OTP generate/verify
-│   ├── data/                  # JSON "database" files (seeded with demo data)
-│   └── server.js              # App entry point
+│   ├── config/db.js       # JSON-file data layer
+│   ├── models/            # One file per entity
+│   ├── routes/            # One Express router per module
+│   ├── middleware/auth.js # JWT guard
+│   ├── utils/otp.js       # OTP generation/verification
+│   ├── data/              # JSON data files, seeded with demo data
+│   └── server.js
 ├── frontend/
-│   ├── index.html             # Login
+│   ├── index.html         # Login
 │   ├── signup.html
 │   ├── forgot-password.html
 │   ├── dashboard.html
@@ -60,19 +47,16 @@ StockSense/
 │   ├── adjustments.html
 │   ├── settings.html
 │   ├── profile.html
-│   ├── css/style.css          # Shared design system
-│   └── js/                    # One file per page/module + shared api.js, layout.js
-├── docs/
-│   └── CONTRIBUTORS.md        # Who built what
-├── setup-git-history.sh       # Recreates commit history with each teammate as author
+│   ├── css/style.css
+│   └── js/
 ├── .gitignore
 ├── LICENSE
 └── README.md
 ```
 
-## 🚀 Getting Started
+## Running it locally
 
-### 1. Backend
+**Backend**
 
 ```bash
 cd backend
@@ -81,82 +65,61 @@ cp .env.example .env
 npm start
 ```
 
-The API runs at `http://localhost:5000`. On first run it seeds a demo login:
+This starts the API at `http://localhost:5000` and seeds a demo login the first time it runs:
 
 ```
 Email:    admin@stocksense.com
 Password: admin123
 ```
 
-### 2. Frontend
+**Frontend**
 
-No build tools required — it's plain HTML/CSS/JS. Easiest options:
+No build step needed. Open `frontend/index.html` with a simple local server — for example, VS Code's Live Server extension, or:
 
-- **VS Code + Live Server extension**: right-click `frontend/index.html` → "Open with Live Server"
-- **Python's built-in server**:
-  ```bash
-  cd frontend
-  python3 -m http.server 5500
-  ```
-  then open `http://localhost:5500`
+```bash
+cd frontend
+python3 -m http.server 5500
+```
 
-Make sure the backend is running first — the frontend calls
-`http://localhost:5000/api` (see `frontend/js/api.js` if you need to change the port).
+Then visit `http://localhost:5500`. Make sure the backend is running first, since the frontend talks to it at `http://localhost:5000/api`.
 
-### 3. Try the flow
-
-1. Log in with the demo account (or sign up as a new user)
-2. Add a product or two in **Products**
-3. Create a **Receipt** from a supplier, then hit **Validate** → watch stock go up
-4. Create a **Delivery Order**, mark it picked/packed, validate it → watch stock go down
-5. Move stock between warehouses in **Internal Transfers**
-6. Reconcile a physical count in **Stock Adjustments**
-7. Check the **Dashboard** — KPIs and the operations feed update live
-
-## 📡 API Reference (summary)
+## API reference
 
 | Method | Endpoint | Description |
 |---|---|---|
 | POST | `/api/auth/signup` | Create an account |
-| POST | `/api/auth/login` | Log in, returns JWT |
-| POST | `/api/auth/forgot-password` | Sends OTP |
-| POST | `/api/auth/reset-password` | Verifies OTP, sets new password |
-| GET/PUT | `/api/auth/me` | View/update profile |
-| GET | `/api/dashboard/kpis` | Dashboard KPI numbers |
+| POST | `/api/auth/login` | Log in, returns a JWT |
+| POST | `/api/auth/forgot-password` | Request an OTP |
+| POST | `/api/auth/reset-password` | Verify OTP and set a new password |
+| GET/PUT | `/api/auth/me` | View or update your profile |
+| GET | `/api/dashboard/kpis` | Dashboard summary numbers |
 | GET | `/api/dashboard/documents` | Filterable feed of all operations |
-| GET/POST | `/api/dashboard/warehouses` | List/add warehouses |
-| GET/POST | `/api/products` | List/create products |
-| GET/POST | `/api/receipts` + `/:id/validate` | Incoming stock |
-| GET/POST | `/api/deliveries` + `/:id/ready`, `/:id/validate` | Outgoing stock |
-| GET/POST | `/api/transfers` + `/:id/validate` | Internal stock moves |
+| GET/POST | `/api/dashboard/warehouses` | List or add warehouses |
+| GET/POST | `/api/products` | List or create products |
+| GET/POST | `/api/receipts` (+ `/:id/validate`) | Incoming stock |
+| GET/POST | `/api/deliveries` (+ `/:id/ready`, `/:id/validate`) | Outgoing stock |
+| GET/POST | `/api/transfers` (+ `/:id/validate`) | Stock moves between warehouses |
 | GET/POST | `/api/adjustments` | Physical count reconciliation |
 
-All routes except `/api/auth/*` and `/api/health` require an
-`Authorization: Bearer <token>` header.
+Every route except `/api/auth/*` and `/api/health` expects an `Authorization: Bearer <token>` header.
 
-## 👥 Team & Modules
+## Team
 
-This repo is split so each teammate owns a clear vertical slice — update the
-names below with your real team:
+Built by a 4-person team, each owning a module end to end:
 
-| Member | Owns | Files |
-|---|---|---|
-| **Member 1** | Auth & Profile | `routes/auth.js`, `middleware/auth.js`, `utils/otp.js`, `models/User.js`, `index.html`, `signup.html`, `forgot-password.html`, `profile.html`, `js/auth.js`, `js/profile.js` |
-| **Member 2** | Dashboard & Infra | `server.js`, `config/db.js`, `routes/dashboard.js`, `models/Warehouse.js`, `dashboard.html`, `settings.html`, `css/style.css`, `js/api.js`, `js/layout.js`, `js/dashboard.js`, `js/settings.js` |
-| **Member 3** | Products & Receipts | `routes/products.js`, `routes/receipts.js`, `models/Product.js`, `models/Receipt.js`, `products.html`, `receipts.html`, `js/products.js`, `js/receipts.js` |
-| **Member 4** | Deliveries, Transfers & Adjustments | `routes/deliveries.js`, `routes/transfers.js`, `routes/adjustments.js`, `models/Delivery.js`, `models/Transfer.js`, `models/Adjustment.js`, `deliveries.html`, `transfers.html`, `adjustments.html`, `js/deliveries.js`, `js/transfers.js`, `js/adjustments.js` |
+- Auth & profile
+- Dashboard & shared infrastructure
+- Products & receipts
+- Delivery orders, transfers & adjustments
 
-See [`docs/CONTRIBUTORS.md`](docs/CONTRIBUTORS.md) for more, and
-`setup-git-history.sh` to generate a commit history that credits each member.
+## What's next
 
-## 🔮 Future Scope
-
-- Real email/SMS delivery for OTPs (currently logged to console for the demo)
+- Real email/SMS delivery for OTPs
 - Barcode/QR scanning for faster picking and counting
-- Role-based permissions (Manager vs Staff) enforced server-side
-- Move from JSON-file storage to MongoDB/Postgres for production use
-- Analytics: stock turnover rate, demand forecasting
+- Role-based permissions for managers vs. staff
+- Moving from JSON files to a proper database (MongoDB/Postgres)
+- Basic analytics — stock turnover, demand trends
 
-## 📄 License
+## License
 
 MIT — see [LICENSE](LICENSE).
